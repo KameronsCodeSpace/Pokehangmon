@@ -1,0 +1,14 @@
+//make case insensitive: CHECK
+//create intro
+  -Ask name
+  -Select starter pokemon
+  -instructions and prompt to start adventure
+//create scene between battle
+  -game automatically prints "Searching for Adventure" for 5 seconds
+  -Game sees something interesting and asks if you want to check it
+  -Will start trainer battle or pokemon battle or item
+//Game start
+  -Will have the basics of guessing enemy pokemon name while they guess yours
+  -turn base
+//make guess letters have spaces: CHECK
+//
