@@ -29,8 +29,13 @@ const replaceMatches = (theirLetter, actualWord, wordHidden) => {
 }
 
 const intro = () => {
-  let userName = readline.question('Whats your name trainer... ? \n');
-  console.log('Hello ' + userName + '!');
+  let trainerName = readline.question(`First, what's your name? \n`);
+  console.log('Right! So your name is ' + trainerName + '!');
+
+  let rivalName = readline.question(`My grandson has been your rival forever. What was his name again? \n`);
+  console.log(`That's Right! I remember now! His name is ${rivalName}!`);
+
+  console.log(`${trainerName} your very own pokemon adventure is about to unfold!`);
 
   startGame();
 }
