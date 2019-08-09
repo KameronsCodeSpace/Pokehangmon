@@ -1,5 +1,6 @@
 const readline = require('readline-sync');
 const textArt = require('./textart.js');
+var player = require('play-sound')(opts = {});
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -79,17 +80,24 @@ class Word extends Letter {
 let lives = 0;
 
 const startMenu = () => {
+  var startMenuMusic = player.play('Music/Music_Title_Screen.mp3', function (err) {
+    if (err && !err.killed) throw err;
+  });
   let mainMenu = textArt.startMenu();
   console.log('                        ■■■■■■■■■■■■■■■■■■■■■■');
   let clickedEnter = readline.question(`                  █■■■■■ Click Enter To Start ■■■■■█`, {hideEchoBack: true, mask: ''});
 
   if (clickedEnter !== undefined) {
     console.clear();
+    startMenuMusic.kill();
     intro();
   }
 }
 
 const intro = () => {
+  var introMusic = player.play('Music/Music_Route_24_rdblu.mp3', function (err) {
+    if (err && !err.killed) throw err;
+  });
   let professor = textArt.professorHair();
 
   readline.question(`Hi, my name is Professor Hair. I'm this town's lead researcher on Pokemon.`, {hideEchoBack: true, mask: ''});
@@ -118,19 +126,20 @@ const intro = () => {
   }
 
   readline.question(`Ok, ${starterPokemon[index]} is a great choice`, {hideEchoBack: true, mask: ''});
-
     trainersPokemon.push(starterPokemon[index]);
-
   console.clear();
+
   let hairTown = textArt.homeTown();
   readline.question(`${trainerName} your very own pokemon adventure is about to unfold!\nPress enter to begin`, {hideEchoBack: true, mask: ''});
   console.clear();
-
+  introMusic.kill();
   startGame();
 }
 
 const startGame = () => {
-
+  var adventureMusic = player.play('Music/Music_Options_Guidepost_rdblu.mp3', function (err) {
+    if (err && !err.killed) throw err;
+  });
   let gameWord = pokemon[Math.floor(Math.random() * pokemon.length)];
   let randomWord = new Word(gameWord);
   lives = 6;
@@ -141,6 +150,10 @@ const startGame = () => {
     console.log('Searching for Adventure...');
     sleep(Math.floor(Math.random() * 10000)).then(() => {
       console.clear();
+      adventureMusic.kill();
+      var foundSomething = player.play('Music/SFX_Fanfare_Item_Obtained_rdblu.mp3', function (err) {
+        if (err && !err.killed) throw err;
+      });
       textArt.trainer();
       readline.question(`You entered a Gym, time to get your first badge!`, {hideEchoBack: true, mask: ''});
       gameRules(randomWord, gameWord)
@@ -151,6 +164,10 @@ const startGame = () => {
       console.log('Searching for Adventure...');
       sleep(Math.floor(Math.random() * 10000)).then(() => {
         console.clear();
+        adventureMusic.kill();
+        var foundSomething = player.play('Music/SFX_Fanfare_Item_Obtained_rdblu.mp3', function (err) {
+          if (err && !err.killed) throw err;
+        });
         textArt.trainer();
         readline.question(`Your Rival has challenged you, show him what you've learned!`, {hideEchoBack: true, mask: ''});
         gameRules(randomWord, gameWord);
@@ -161,6 +178,10 @@ const startGame = () => {
       console.log('Searching for Adventure...');
       sleep(Math.floor(Math.random() * 10000)).then(() => {
         console.clear();
+        adventureMusic.kill();
+        var foundSomething = player.play('Music/SFX_Fanfare_Item_Obtained_rdblu.mp3', function (err) {
+          if (err && !err.killed) throw err;
+        });
         textArt.trainer();
         readline.question(`You found a wild Pokemon, prepare for battle!`, {hideEchoBack: true, mask: ''});
         console.clear();
@@ -179,8 +200,26 @@ const gameRules = (theirGuess, actualWord) => {
   theirGuess.populateArray();
   let guessArr = [];
 
+  if (battles === 5) {
+    var rivalMusic = player.play('Music/Music_Final_Victory_Road_rdblu.mp3', function (err) {
+      if (err && !err.killed) throw err;
+    });
+    console.clear();
+  } else if (battles === 3) {
+    var gymMusic = player.play('Music/Music_Battle_Vs_Gym_Leader_rdblu.mp3', function (err) {
+      if (err && !err.killed) throw err;
+    });
+    console.clear();
+  } else {
+    var wildMusic = player.play('Music/Music_Battle_Vs_Wild_Pokemon_rdblu.mp3', function (err) {
+      if (err && !err.killed) throw err;
+    });
+    console.clear();
+  }
+
 while(lives > 0) {
   let letterWordArr = [];
+
   if (battles === 5) {
     textArt.rival();
   } else if (battles === 3) {
@@ -203,7 +242,7 @@ while(lives > 0) {
     theirGuess.checkGuessWord(upperCaseAnswer);
 
     theirGuess.letterArr.forEach(element => {
-      letterWordArr.push(element.letter);//.toUpperCase());
+      letterWordArr.push(element.letter);
     })
 
     console.log('===============');
@@ -216,19 +255,51 @@ while(lives > 0) {
 
     if (`${letterWordArr.join(' ')} ` === theirGuess.createHiddenString()) {
       console.clear();
-      battles += 1;
 
-      if(battles === 5){
+      if (battles === 5){
         console.clear();
+        rivalMusic.kill();
+        var rivalWin = player.play('Music/SFX_Fanfare_Pokemon_Caught_rdblu.mp3', function (err) {
+          if (err && !err.killed) throw err;
+        });
         textArt.victory();
         console.log(`\nCongratulations you've defated your Rival and finished Pokehangmon!\n`)
         process.exit();
+      } else if (battles === 3) {
+        if (gymMusic !== undefined) {
+          gymMusic.kill();
+        }
+        var gymWin = player.play('Music/SFX_Fanfare_Pokemon_Obtained_rdblu.mp3', function (err) {
+          if (err && !err.killed) throw err;
+        });
+        console.log(`Congrats you won the cool dude Badge! The word was ${theirGuess.word}!`)
+        battles += 1;
+        // console.log(battles);
+        startGame();
+        break;
       } else {
+        wildMusic.kill();
+        var wildWin = player.play('Music/SFX_Fanfare_Trade_Pokemon_Received_rdblu.mp3', function (err) {
+          if (err && !err.killed) throw err;
+        });
         console.log(`Congrats you won, the word was ${theirGuess.word}!`)
+        battles += 1;
+        // console.log(battles);
         startGame();
         break;
       }
     }
+  }
+  if (lives < 1) {
+  console.log('You were defeated and your adventure has come to an end.')
+  if (battles === 5) {
+    rivalMusic.kill();
+  } else if (battles === 3) {
+    gymMusic.kill();
+  } else {
+    wildMusic.kill();
+  }
+  process.exit();
   }
 }
 
