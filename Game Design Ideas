@@ -1,3 +1,4 @@
+//Game Logic
 //make case insensitive: CHECK
 //create intro
   -Ask name
@@ -12,3 +13,15 @@
   -turn base
 //make random word and guess letters have spaces
 //Upgrade the code!
+
+//Game Design
+//Start Menu: Will display main character and title
+//Intro: to select your pokemon and rival name and hear a basic story
+//Start adventure: will start queue for 5 different encounters. One will
+  be a Gym fight and last a Rival battle. The rest will be random pokemon
+  encounters.
+//Trainer will have only 1 life per pokemon owned. Pokemon dies off when you lose
+  a round and your next pokemon is used. 0 pokemon loses game and exits end game details.
+//Trainer Starts with 1 pokemon and has a chance to gain 3 during random encounters
+//gym trainer has 2 random pokemon and gives a cool badge thats displayed we defeated
+//Rival has 3 random pokemon and when defeated triggers the completion display
